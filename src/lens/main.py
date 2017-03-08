@@ -1,5 +1,14 @@
 import db
 
+
+def func1():
+    pass
+
+
+def func2():
+    pass
+
+
 # db.create_index("Movie", "movie_id")
 # db.create_index("User", "user_id")
 #

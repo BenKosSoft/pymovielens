@@ -171,3 +171,23 @@ def get_avg_rating_of_movie(movie_id):
     if record_time:
         end = time.time()
         print(end - start)
+
+
+# get average of ratings of users
+def get_avg_rating_of_user(user_id):
+    pass
+
+
+#
+def create_dynamic_similarity():
+    pass
+
+
+#
+def create_static_similarity():
+    pass
+
+
+#
+def get_all_movies():
+    pass

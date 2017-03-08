@@ -21,3 +21,16 @@ index_query_create = "CREATE INDEX ON :{}({})"
 movie_query_get_avg_rating = "MATCH (m:Movie)<-[r:rates]-(u:User)" \
                              "WHERE m.movie_id = {movie_id}" \
                              "RETURN m.title AS title, AVG(r.rating) AS rating_avg"
+user_query_get_avg_rating = "MATCH (m:Movie)<-[r:rates]-(u:User)" \
+                            "WHERE u.user_id = {user_id}" \
+                            "RETURN u.user_id, AVG(r.rating) AS rating_avg"
+movie_query_get_all = "MATCH (m:Movie)<-[r:rates]-(u:User)" \
+                             "RETURN m.movie_id, m.genres"
+movie_query_create_static_similarity = "UNWIND {data} as d " \
+                      "MATCH (m1:Movie {movie_id:d.movie1_id}) " \
+                      "MATCH (m2:Movie {movie_id:d.movie2_id}) " \
+                      "MERGE (m1)-[:static_sim {point:d.point}]-(m2)"
+movie_query_create_dynamic_similarity = "UNWIND {data} as d " \
+                      "MATCH (m1:Movie {movie_id:d.movie1_id}) " \
+                      "MATCH (m2:Movie {movie_id:d.movie2_id}) " \
+                      "MERGE (m1)-[:dynamic_sim {point:d.point}]-(m2)"
