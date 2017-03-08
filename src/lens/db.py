@@ -175,7 +175,24 @@ def get_avg_rating_of_movie(movie_id):
 
 # get average of ratings of users
 def get_avg_rating_of_user(user_id):
-    pass
+    if record_time:
+        start = time.time()
+
+    print("get_avg_rating_of_user start")
+    with neo4jdriver.session.begin_transaction() as tx:
+        records = tx.run(dictionary.user_query_get_avg_rating, user_id=user_id)
+        if utildb.is_record_empty(records):
+            print "No record!"
+        else:
+            for record in records:
+                user_id = record["user_id"]
+                rating_avg = record["rating_avg"]
+                print("%s has %s average rating" % (user_id, rating_avg))
+    print("get_avg_rating_of_user end")
+
+    if record_time:
+        end = time.time()
+        print(end - start)
 
 
 #

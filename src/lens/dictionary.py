@@ -23,9 +23,9 @@ movie_query_get_avg_rating = "MATCH (m:Movie)<-[r:rates]-(u:User)" \
                              "RETURN m.title AS title, AVG(r.rating) AS rating_avg"
 user_query_get_avg_rating = "MATCH (m:Movie)<-[r:rates]-(u:User)" \
                             "WHERE u.user_id = {user_id}" \
-                            "RETURN u.user_id, AVG(r.rating) AS rating_avg"
+                            "RETURN u.user_id as user_id, AVG(r.rating) AS rating_avg"
 movie_query_get_all = "MATCH (m:Movie)<-[r:rates]-(u:User)" \
-                             "RETURN m.movie_id, m.genres"
+                             "RETURN m.movie_id as movie_id, m.genres as genres"
 movie_query_create_static_similarity = "UNWIND {data} as d " \
                       "MATCH (m1:Movie {movie_id:d.movie1_id}) " \
                       "MATCH (m2:Movie {movie_id:d.movie2_id}) " \

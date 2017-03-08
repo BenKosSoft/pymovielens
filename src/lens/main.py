@@ -19,3 +19,4 @@ def func2():
 
 db.get_movie_by_id(1)
 db.get_avg_rating_of_movie(1)
+db.get_avg_rating_of_user(1)
