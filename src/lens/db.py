@@ -141,7 +141,7 @@ def get_movie_by_id(movie_id):
         if utildb.is_record_empty(records):
             print "No record!"
         else:
-            for record in records.records():
+            for record in records:
                 title = record[0]["title"]
                 print(title)
     print("return_movie end")
@@ -156,7 +156,7 @@ def get_avg_rating_of_movie(movie_id):
     if record_time:
         start = time.time()
 
-    print("get_avg_rating_of_movie start")
+    # print("get_avg_rating_of_movie start")
     with neo4jdriver.session.begin_transaction() as tx:
         records = tx.run(dictionary.movie_query_get_avg_rating, movie_id=movie_id)
         if utildb.is_record_empty(records):
@@ -166,7 +166,7 @@ def get_avg_rating_of_movie(movie_id):
                 title = record["title"]
                 avg = record["rating_avg"]
                 print("%s has %s average rating" % (title, avg))
-    print("get_avg_rating_of_movie end")
+    # print("get_avg_rating_of_movie end")
 
     if record_time:
         end = time.time()
@@ -178,26 +178,65 @@ def get_avg_rating_of_user(user_id):
     if record_time:
         start = time.time()
 
-    print("get_avg_rating_of_user start")
+    # print("get_avg_rating_of_user start")
     with neo4jdriver.session.begin_transaction() as tx:
         records = tx.run(dictionary.user_query_get_avg_rating, user_id=user_id)
+        rating_mean = 0
         if utildb.is_record_empty(records):
             print "No record!"
         else:
             for record in records:
-                user_id = record["user_id"]
-                rating_avg = record["rating_avg"]
-                print("%s has %s average rating" % (user_id, rating_avg))
-    print("get_avg_rating_of_user end")
+                # user_id = record["user_id"]
+                rating_mean = record["rating_avg"]
+                # print("%s has %s average rating" % (user_id, rating_mean))
+    # print("get_avg_rating_of_user end")
 
     if record_time:
         end = time.time()
         print(end - start)
 
+    return rating_mean
+
+
+# get average of ratings of all users
+def get_avg_rating_of_all_user():
+    if record_time:
+        start = time.time()
+
+    users_rating_avg = {}
+    # print("get_avg_rating_of_user start")
+    with neo4jdriver.session.begin_transaction() as tx:
+        records = tx.run(dictionary.user_query_get_all_avg_rating)
+        if utildb.is_record_empty(records):
+            print "No record!"
+        else:
+            for record in records:
+                user_id = record["user_id"]
+                rating_mean = record["rating_avg"]
+                users_rating_avg[user_id] = rating_mean
+    # print("get_avg_rating_of_user end")
+
+    if record_time:
+        end = time.time()
+        print(end - start)
+
+    return users_rating_avg
+
 
 #
-def create_dynamic_similarity():
-    pass
+def create_dynamic_similarity(data):
+    if record_time:
+        start = time.time()
+
+    print("create_dynamic_similarity start")
+    with neo4jdriver.session.begin_transaction() as tx:
+        tx.run(dictionary.movie_query_create_dynamic_similarity, data=data)
+        tx.commit()
+    print("create_dynamic_similarity end")
+
+    if record_time:
+        end = time.time()
+        print(end - start)
 
 
 #
@@ -208,3 +247,40 @@ def create_static_similarity():
 #
 def get_all_movies():
     pass
+
+
+#
+def get_by_ratings_movie_ids(movie1_id, movie2_id):
+    if record_time:
+        start = time.time()
+
+    # print("get_by_ratings_movie_ids start")
+    with neo4jdriver.session.begin_transaction() as tx:
+        records = tx.run(dictionary.movie_movie_query_adjusted_cosine, movie1_id=movie1_id, movie2_id=movie2_id)
+    # print("get_by_ratings_movie_ids end")
+
+    if record_time:
+        end = time.time()
+        print(end - start)
+
+    return records
+
+
+# get count of movie
+def get_movie_ids():
+    if record_time:
+        start = time.time()
+
+    data = []
+    # print("get_movie_count start")
+    with neo4jdriver.session.begin_transaction() as tx:
+        records = tx.run(dictionary.movie_query_get_all_movie_ids)
+        for record in records:
+            data.append(record["movie_id"])
+    # print("get_movie_count end")
+
+    if record_time:
+        end = time.time()
+        print(end - start)
+
+    return data
