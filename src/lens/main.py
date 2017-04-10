@@ -8,7 +8,6 @@ def func1():
 def func2():
     pass
 
-
 # db.create_index("Movie", "movie_id")
 # db.create_index("User", "user_id")
 #
