@@ -1,8 +1,8 @@
-import utildb
-import dictionary
-import time
-import neo4jdriver
 import csv
+import time
+
+import src.lens.utildb
+from src import dictionary, neo4jdriver
 
 record_time = False
 
@@ -138,7 +138,7 @@ def get_movie_by_id(movie_id):
     print("return_movie start")
     with neo4jdriver.session.begin_transaction() as tx:
         records = tx.run(dictionary.movie_query_get_by_id, movie_id=movie_id)
-        if utildb.is_record_empty(records):
+        if src.lens.utildb.is_record_empty(records):
             print "No record!"
         else:
             for record in records:
@@ -159,7 +159,7 @@ def get_avg_rating_of_movie(movie_id):
     # print("get_avg_rating_of_movie start")
     with neo4jdriver.session.begin_transaction() as tx:
         records = tx.run(dictionary.movie_query_get_avg_rating, movie_id=movie_id)
-        if utildb.is_record_empty(records):
+        if src.lens.utildb.is_record_empty(records):
             print "No record!"
         else:
             for record in records:
@@ -182,7 +182,7 @@ def get_avg_rating_of_user(user_id):
     with neo4jdriver.session.begin_transaction() as tx:
         records = tx.run(dictionary.user_query_get_avg_rating, user_id=user_id)
         rating_mean = 0
-        if utildb.is_record_empty(records):
+        if src.lens.utildb.is_record_empty(records):
             print "No record!"
         else:
             for record in records:
@@ -207,7 +207,7 @@ def get_avg_rating_of_all_user():
     # print("get_avg_rating_of_user start")
     with neo4jdriver.session.begin_transaction() as tx:
         records = tx.run(dictionary.user_query_get_all_avg_rating)
-        if utildb.is_record_empty(records):
+        if src.lens.utildb.is_record_empty(records):
             print "No record!"
         else:
             for record in records:
@@ -284,3 +284,13 @@ def get_movie_ids():
         print(end - start)
 
     return data
+
+
+# returns list of (otherMovieId, similarity) of movie
+def get_similarities_by_movie(movie_id):
+    pass
+
+
+# returns list of (movieId, rating) pairs of user
+def get_ratings_of_user(user_id):
+    pass

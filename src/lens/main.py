@@ -1,6 +1,6 @@
-import db
-import utildb
 import math
+
+from src import db
 
 
 # item - item collaborative user dependent algorithm by using adjusted cosine similarity
