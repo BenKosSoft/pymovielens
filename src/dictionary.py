@@ -41,9 +41,9 @@ movie_movie_query_adjusted_cosine = "MATCH (m1:Movie)<-[r1:rates]-(u:User)-[r2:r
                                     "RETURN r1.rating as rating1, u.user_id as user_id, r2.rating as rating2"
 movie_query_get_all_movie_ids = "MATCH (m:Movie)" \
                       "RETURN m.movie_id as movie_id"
-movie_query_get_similarities_by_movie = "MATCH (m1:Movie)-[ds:dynamic_sim]-(m2:Movie) " \
-                                        "WHERE m1.movie_id = {movie_id} " \
-                                        "RETURN m2.movie_id as other_movie_id, ds.point as similarity"
-user_query_get_ratings_of_user = "MATCH (u:User)-[r:rates]->(m:Movie) " \
-                                 "WHERE u.user_id = {user_id} " \
-                                 "RETURN m.movie_id as movie_id, r.rating as rating"
+user_movie_query_get_prediction = "MATCH (u:User)-[r:rates]->(m:Movie), (m1:Movie)-[d:dynamic_sim]-(m2:Movie) " \
+                                  "WHERE u.user_id = {user_id} AND m1.movie_id  = {movie_id} " \
+                                  "AND m.movie_id = m2.movie_id AND d.point > 0 " \
+                                  "WITH r,d ORDER BY d.point DESC LIMIT {k_neighbours} " \
+                                  "RETURN CASE SUM(d.point) WHEN 0 THEN -1 " \
+                                  "ELSE SUM(r.rating*d.point) / SUM(d.point) END AS prediction"

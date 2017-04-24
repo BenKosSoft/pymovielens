@@ -1,7 +1,7 @@
 import csv
 import time
 
-from src import dictionary, neo4jdriver, utildb
+from src import dictionary, neo4jdriver
 
 record_time = False
 
@@ -137,7 +137,7 @@ def get_movie_by_id(movie_id):
     print("return_movie start")
     with neo4jdriver.session.begin_transaction() as tx:
         records = tx.run(dictionary.movie_query_get_by_id, movie_id=movie_id)
-        if utildb.is_record_empty(records):
+        if not len(records.data()):
             print "No record!"
         else:
             for record in records:
@@ -158,7 +158,7 @@ def get_avg_rating_of_movie(movie_id):
     # print("get_avg_rating_of_movie start")
     with neo4jdriver.session.begin_transaction() as tx:
         records = tx.run(dictionary.movie_query_get_avg_rating, movie_id=movie_id)
-        if utildb.is_record_empty(records):
+        if not len(records.data()):
             print "No record!"
         else:
             for record in records:
@@ -181,7 +181,7 @@ def get_avg_rating_of_user(user_id):
     with neo4jdriver.session.begin_transaction() as tx:
         records = tx.run(dictionary.user_query_get_avg_rating, user_id=user_id)
         rating_mean = 0
-        if utildb.is_record_empty(records):
+        if not len(records.data()):
             print "No record!"
         else:
             for record in records:
@@ -206,7 +206,7 @@ def get_avg_rating_of_all_user():
     # print("get_avg_rating_of_user start")
     with neo4jdriver.session.begin_transaction() as tx:
         records = tx.run(dictionary.user_query_get_all_avg_rating)
-        if utildb.is_record_empty(records):
+        if not len(records.data()):
             print "No record!"
         else:
             for record in records:
@@ -262,7 +262,7 @@ def get_by_ratings_movie_ids(movie1_id, movie2_id):
         end = time.time()
         print(end - start)
 
-    return records
+    return records.data()
 
 
 # get count of movie
@@ -286,40 +286,20 @@ def get_movie_ids():
 
 
 # returns list of (otherMovieId, similarity) of movie
-def get_similarities_by_movie(movie_id):
+def get_prediction_by_user_and_movie_id(user_id, movie_id, k_neighbours=5):
     if record_time:
         start = time.time()
 
-    sims = {}
-    # print("get_similarities_by_movie start")
+    # print("get_prediction_by_user_and_movie_id start")
     with neo4jdriver.session.begin_transaction() as tx:
-        records = tx.run(dictionary.movie_query_get_similarities_by_movie, movie_id=movie_id)
+        records = tx.run(dictionary.user_movie_query_get_prediction,
+                         movie_id=movie_id, user_id=user_id, k_neighbours=k_neighbours)
         for record in records:
-            sims[record["other_movie_id"]] = record["similarity"]
-    # print("get_similarities_by_movie end")
+            prediction = record["prediction"]
+    # print("get_prediction_by_user_and_movie_id end")
 
     if record_time:
         end = time.time()
         print(end - start)
 
-    return sims
-
-
-# returns list of (movieId, rating) pairs of user
-def get_ratings_of_user(user_id):
-    if record_time:
-        start = time.time()
-
-    ratings = {}
-    # print("get_similarities_by_movie start")
-    with neo4jdriver.session.begin_transaction() as tx:
-        records = tx.run(dictionary.user_query_get_ratings_of_user, user_id=user_id)
-        for record in records:
-            ratings[record["movie_id"]] = record["rating"]
-    # print("get_similarities_by_movie end")
-
-    if record_time:
-        end = time.time()
-        print(end - start)
-
-    return ratings
+    return prediction
