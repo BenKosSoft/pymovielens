@@ -1,4 +1,5 @@
 import math
+import time
 
 from src import db
 
@@ -9,13 +10,12 @@ def item_item_collaborative_user_dependent():
     users_rating_avg = db.get_avg_rating_of_all_user()
     movie_ids = db.get_movie_ids()
     data = []
-    for movie1_id in movie_ids:
-        movie_ids.pop(0)  # to eliminate same movie_ids and combinations (ex: 1-2 and 2-1)
-        for movie2_id in movie_ids:
-            records = db.get_by_ratings_movie_ids(movie1_id, movie2_id)
+    for movie1_index in range(0, len(movie_ids)):
+        for movie2_index in range(movie1_index+1, len(movie_ids)):
+            records = db.get_by_ratings_movie_ids(movie_ids[movie1_index], movie_ids[movie2_index])
             # check records size, if it is bigger than 10 common user, then continue
             if len(records) < 10:
-                # print "Unsufficient Number of Data..."
+                print "Unsufficient Number of Data..."
                 pass
             else:
                 a, b, c = 0, 0, 0
@@ -29,11 +29,13 @@ def item_item_collaborative_user_dependent():
                     d = (rating1-user_rating_mean)
                     e = (rating2-user_rating_mean)
                     a += d*e
-                    b += d**2
-                    c += e**2
+                    b += d*d
+                    c += e*e
                 if b != 0 and c != 0:
                     sim = a / (math.sqrt(b)*math.sqrt(c))
-                    data.append({"movie1_id": movie1_id, "movie2_id": movie2_id, "point": sim})
+                    data.append({"movie1_id": movie_ids[movie1_index],
+                                 "movie2_id": movie_ids[movie2_index],
+                                 "point": sim})
                     # print movie1_id, movie2_id, sim
                     if len(data) == 10000:
                         db.create_dynamic_similarity(data)
@@ -51,6 +53,9 @@ def item_item_collaborative_user_dependent():
 def func2():
     pass
 
+start = time.time()
+
+
 # db.create_index("Movie", "movie_id")
 # db.create_index("User", "user_id")
 #
@@ -64,3 +69,6 @@ def func2():
 # db.get_avg_rating_of_user(5)
 
 item_item_collaborative_user_dependent()
+
+end = time.time()
+print "Execution time: ", end-start
