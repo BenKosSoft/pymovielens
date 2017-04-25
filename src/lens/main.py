@@ -56,19 +56,19 @@ def func2():
 start = time.time()
 
 
-# db.create_index("Movie", "movie_id")
-# db.create_index("User", "user_id")
-#
-# db.create_movies()
+db.create_index("Movie", "movie_id")
+db.create_index("User", "user_id")
+
+db.create_movies()
 # db.create_links()
-# db.create_ratings()
+db.create_ratings()
 # db.create_tags()
 #
 # db.get_movie_by_id(1)
 # db.get_avg_rating_of_movie(1)
 # db.get_avg_rating_of_user(5)
 
-item_item_collaborative_user_dependent()
+# item_item_collaborative_user_dependent()
 
 end = time.time()
 print "Execution time: ", end-start

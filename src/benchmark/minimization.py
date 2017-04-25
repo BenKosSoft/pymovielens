@@ -3,10 +3,10 @@ import os
 import operator
 
 base_dir = "../../res_unshared/"
-movie_csv = "../../res_unshared/ml-latest/movies.csv"
-rating_csv = "../../res_unshared/ml-latest/ratings.csv"
+movie_csv = "../../res_unshared/ml-latest-small/movies.csv"
+rating_csv = "../../res_unshared/ml-latest-small/ratings.csv"
 
-_movie_count = 100
+_movie_count = 10
 
 
 def most_rated_movies():
@@ -46,8 +46,8 @@ def create_new_csv(new_path, movie_dict, old_csv):
 
 
 def main():
-    new_movies_path = base_dir + "ml-mini/movies.csv"
-    new_ratings_path = base_dir + "ml-mini/ratings.csv"
+    new_movies_path = base_dir + "ml-mini-small/movies.csv"
+    new_ratings_path = base_dir + "ml-mini-small/ratings.csv"
     movie_dict = dict(most_rated_movies())
 
     create_new_csv(new_movies_path, movie_dict, movie_csv)
