@@ -1,5 +1,5 @@
 import numpy as np
-import db
+from src import db
 
 # differentially private count query
 mu = 0
