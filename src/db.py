@@ -303,3 +303,17 @@ def get_prediction_by_user_and_movie_id(user_id, movie_id, k_neighbours=5):
         print(end - start)
 
     return prediction
+
+
+# get movie rating count by movie id
+def get_movie_rating_count(movie_id):
+    count = -1
+    with neo4jdriver.session.begin_transaction() as tx:
+        records = tx.run(dictionary.movie_rating_count_query_by_id, movie_id=movie_id)
+        data = records.data()
+        if not len(data):
+            print "No record!"
+        else:
+            # privacy
+            count = data[0]['count']
+    return count

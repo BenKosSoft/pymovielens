@@ -47,3 +47,6 @@ user_movie_query_get_prediction = "MATCH (u:User)-[r:rates]->(m:Movie), (m1:Movi
                                   "WITH r,d ORDER BY d.point DESC LIMIT {k_neighbours} " \
                                   "RETURN CASE SUM(d.point) WHEN 0 THEN -1 " \
                                   "ELSE SUM(r.rating*d.point) / SUM(d.point) END AS prediction"
+movie_rating_count_query_by_id = "MATCH (m:Movie)-[]-(u:User) " \
+                           "WHERE m.movie_id = {movie_id} " \
+                           "RETURN count(*) as count"
