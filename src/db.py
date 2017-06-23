@@ -27,11 +27,10 @@ def create_movies():
         start = time.time()
 
     print("create_movies start")
-    with open(dictionary.movie_csv, 'rb') as csv_file:
-        iter_reader = iter(csv.reader(csv_file, delimiter=',', quotechar='"'))
-        next(iter_reader)
-        for row in iter_reader:
-            data.append({"movie_id": int(row[0]), "title": row[1], "genres": row[2]})
+    with open(dictionary.movie_csv, 'rb') as movies:
+        csvr = csv.DictReader(movies, delimiter=',', quotechar='"')
+        for row in csvr:
+            data.append({"movie_id": int(row['movieId']), "title": row['title'], "genres": row['genres']})
             if len(data) == 10000:
                 with neo4jdriver.session.begin_transaction() as tx:
                     tx.run(dictionary.movie_query_create, data=data)
@@ -81,11 +80,13 @@ def create_ratings():
         start = time.time()
 
     print("create_ratings start")
-    with open(dictionary.rating_csv, 'rb') as csv_file:
-        iter_reader = iter(csv.reader(csv_file, delimiter=',', quotechar='"'))
-        next(iter_reader)
-        for row in iter_reader:
-            data.append({"movie_id": int(row[1]), "user_id": int(row[0]), "rating": float(row[2]), "timestamp": row[3]})
+    with open(dictionary.rating_csv, 'rb') as ratings:
+        csvr = csv.DictReader(ratings, delimiter=',', quotechar='"')
+        for row in csvr:
+            data.append({"movie_id": int(row['movieId']),
+                         "user_id": int(row['userId']),
+                         "rating": float(row['rating']),
+                         "timestamp": row['timestamp']})
             if len(data) == 10000:
                 with neo4jdriver.session.begin_transaction() as tx:
                     tx.run(dictionary.rating_query_create, data=data)
@@ -206,13 +207,15 @@ def get_avg_rating_of_all_user():
     # print("get_avg_rating_of_user start")
     with neo4jdriver.session.begin_transaction() as tx:
         records = tx.run(dictionary.user_query_get_all_avg_rating)
-        if not len(records.data()):
-            print "No record!"
-        else:
-            for record in records:
+        data = records.data()
+        if len(data):
+            for record in data:
                 user_id = record["user_id"]
                 rating_mean = record["rating_avg"]
                 users_rating_avg[user_id] = rating_mean
+        else:
+            print "No record!"
+
     # print("get_avg_rating_of_user end")
 
     if record_time:
