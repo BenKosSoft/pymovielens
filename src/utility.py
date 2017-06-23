@@ -52,3 +52,7 @@ def calculate_similarity_values2(records, averages):
 
 def normalize_similarity(sim):
     return round((sim / 2) + 0.5, 3)
+
+
+def get_exponential_recommendation_order(movies):
+    pass
