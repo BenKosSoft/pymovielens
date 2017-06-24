@@ -54,5 +54,36 @@ def normalize_similarity(sim):
     return round((sim / 2) + 0.5, 3)
 
 
-def get_exponential_recommendation_order(movies):
-    pass
+def get_exponential_recommendation_order(movies, epsilon, sensitivity):
+    """
+    function to get epsilon differentially private order using exponential mechanism
+    :param movies: array of tuples where first element of each tuple has movie id and
+                second element has similarity value
+    :param epsilon:
+    :param sensitivity:
+    :return: returns an array of movie id's representing the recommendation order
+    """
+    movies = list(movies)
+    if len(movies) == 1:
+        return movies[0]
+
+    # calculate probability weights for exponential mechanism
+    coefficient = epsilon / (2 * sensitivity)
+
+    sum_probabilities = 0
+    movies_with_probabilities = np.array(movies, dtype=[('id', int), ('prob', float)])
+
+    for i, m in enumerate(movies):
+        prob = np.exp(m[1] * coefficient)
+        movies_with_probabilities[i]['prob'] = prob
+        sum_probabilities += prob
+
+    movies_with_probabilities['prob'] /= sum_probabilities
+
+    # pick one from array randomly with the given weights
+    choice = np.random.choice(movies_with_probabilities, 1, p=movies_with_probabilities['prob'])
+
+    # put the selected element in front of the array and re-run the exponential mechanism
+    remaining = np.extract(condition=np.not_equal(movies_with_probabilities, choice),
+                           arr=movies_with_probabilities)
+    return np.append(choice[0]['id'], get_exponential_recommendation_order(remaining, epsilon, sensitivity))
