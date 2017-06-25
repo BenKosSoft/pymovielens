@@ -1,5 +1,5 @@
 import math
-from sklearn.metrics.pairwise import cosine_similarity as cs
+# from sklearn.metrics.pairwise import cosine_similarity as cs
 import numpy as np
 
 
@@ -65,7 +65,7 @@ def get_exponential_recommendation_order(movies, epsilon, sensitivity):
     """
     movies = list(movies)
     if len(movies) == 1:
-        return movies[0]
+        return movies[0]['id']
 
     # calculate probability weights for exponential mechanism
     coefficient = epsilon / (2 * sensitivity)
@@ -84,6 +84,6 @@ def get_exponential_recommendation_order(movies, epsilon, sensitivity):
     choice = np.random.choice(movies_with_probabilities, 1, p=movies_with_probabilities['prob'])
 
     # put the selected element in front of the array and re-run the exponential mechanism
-    remaining = np.extract(condition=np.not_equal(movies_with_probabilities, choice),
+    remaining = np.extract(condition=np.not_equal(movies_with_probabilities['id'], choice['id']),
                            arr=movies_with_probabilities)
     return np.append(choice[0]['id'], get_exponential_recommendation_order(remaining, epsilon, sensitivity))
