@@ -66,6 +66,8 @@ def get_exponential_recommendation_order(movies, epsilon, sensitivity):
     movies = list(movies)
     if len(movies) == 1:
         return movies[0]['id']
+    elif len(movies) <= 0:
+        return []
 
     # calculate probability weights for exponential mechanism
     coefficient = epsilon / (2 * sensitivity)
