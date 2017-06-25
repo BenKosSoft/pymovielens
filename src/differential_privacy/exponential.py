@@ -27,7 +27,7 @@ def main():
         movies = [m[0] for m in movies]
         print movies, new_order
 
-        error += benchmark(movies, new_order)
+        error += benchmark(movies, new_order.tolist())
 
     print "Error is ", error
 
