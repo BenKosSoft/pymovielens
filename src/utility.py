@@ -86,6 +86,5 @@ def get_exponential_recommendation_order(movies, epsilon, sensitivity):
     choice = np.random.choice(movies_with_probabilities, 1, p=movies_with_probabilities['prob'])
 
     # put the selected element in front of the array and re-run the exponential mechanism
-    remaining = np.extract(condition=np.not_equal(movies_with_probabilities['id'], choice['id']),
-                           arr=movies_with_probabilities)
+    remaining = np.extract(condition=np.not_equal(movies_with_probabilities['id'], choice['id']), arr=movies)
     return np.append(choice[0]['id'], get_exponential_recommendation_order(remaining, epsilon, sensitivity))
