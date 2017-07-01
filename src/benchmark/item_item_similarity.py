@@ -1,3 +1,5 @@
+# TODO: pathleri paths'e al.
+
 from src import db
 import csv
 import time
