@@ -4,8 +4,8 @@
 # ML-MINI
 movies_mini_csv = "../../res_unshared/ml-mini/movies.csv"
 ratings_mini_csv = "../../res_unshared/ml-mini/ratings.csv"
-ratings_mini_train_80_csv = "../../res_unshared/ml-mini/ratings_train_0.8.csv"
-ratings_mini_test_20_csv = "../../res_unshared/ml-mini/ratings_test_0.2.csv"
+ratings_mini_train_csv = "../../res_unshared/ml-mini/ratings_train_{}.csv"
+ratings_mini_test_csv = "../../res_unshared/ml-mini/ratings_test_{}.csv"
 
 # ML-MINI-SMALL
 movies_mini_small_csv = "../../res_unshared/ml-mini/movies.csv"
