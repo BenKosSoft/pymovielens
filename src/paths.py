@@ -1,4 +1,26 @@
-movie_csv = "../../res_unshared/ml-mini/movies.csv"
-rating_csv = "../../res_unshared/ml-mini/ratings.csv"
-link_csv = "../../res_unshared/ml-latest-small/links.csv"
-tag_csv = "../../res_unshared/ml-latest-small/tags.csv"
+# CSV FILES AVAILABLE ON GOOGLE DRIVE
+# https://drive.google.com/drive/folders/0ByD4DTHq_FmOSy0xSnc3eG5qS00?usp=sharing
+
+# ML-MINI
+movies_mini_csv = "../../res_unshared/ml-mini/movies.csv"
+ratings_mini_csv = "../../res_unshared/ml-mini/ratings.csv"
+ratings_mini_train_80_csv = "../../res_unshared/ml-mini/ratings_train_0.8.csv"
+ratings_mini_test_20_csv = "../../res_unshared/ml-mini/ratings_test_0.2.csv"
+
+# ML-MINI-SMALL
+movies_mini_small_csv = "../../res_unshared/ml-mini/movies.csv"
+ratings_mini_small_csv = "../../res_unshared/ml-mini/ratings.csv"
+
+# ML-LATEST
+movies_latest_csv = "../../res_unshared/ml-latest/movies.csv"
+ratings_latest_csv = "../../res_unshared/ml-latest/ratings.csv"
+links_latest_csv = "../../res_unshared/ml-latest/links.csv"
+tags_latest_csv = "../../res_unshared/ml-latest/tags.csv"
+genome_scores_latest_csv = "../../res_unshared/ml-latest/genome-scores.csv"
+genome_tags_latest_csv = "../../res_unshared/ml-latest/genome-tags.csv"
+
+# ML-LATEST-SMALL
+movies_latest_small_csv = "../../res_unshared/ml-latest-small/movies.csv"
+ratings_latest_small_csv = "../../res_unshared/ml-latest-small/ratings.csv"
+links_latest_small_csv = "../../res_unshared/ml-latest-small/links.csv"
+tags_latest_small_csv = "../../res_unshared/ml-latest-small/tags.csv"

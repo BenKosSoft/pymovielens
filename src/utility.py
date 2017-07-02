@@ -3,7 +3,7 @@ import math
 import numpy as np
 
 
-# This functions calculate similarity by our implementation
+# This functions calculate adjusted cosine similarity by our implementation
 def calculate_similarity(records, averages):
     a, b, c = calculate_similarity_values(records, averages)
     if b != 0 and c != 0:
@@ -30,7 +30,7 @@ def calculate_similarity_values(records, averages):
     return a, b, c
 
 
-# This functions calculate similarity by default functions
+# This functions calculate adjusted cosine similarity by default functions
 def calculate_similarity2(records, users_rating_avg):
     x, y, n = calculate_similarity_values2(records, users_rating_avg)
     x = np.subtract(x, n)
