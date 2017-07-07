@@ -47,7 +47,12 @@ movie_rating_count_query_by_id = "MATCH (m:Movie)-[]-(u:User) " \
                                  "WHERE m.movie_id = {movie_id} " \
                                  "RETURN count(*) as count"
 
-similarities_by_movie = "MATCH (m1:Movie)-[d]->(m2:Movie) " \
+similarities_by_movie_neighbour = "MATCH (m1:Movie)-[d]-(m2:Movie) " \
                                   "WHERE m1.movie_id = {movie_id} " \
                                   "RETURN m2.movie_id as movie2_id, d.point as sim " \
                                   "ORDER BY sim DESC LIMIT {k_neighbours}"
+
+similarities_by_movie = "MATCH (m1:Movie)-[d]-(m2:Movie) " \
+                        "WHERE m1.movie_id = {movie_id} " \
+                        "RETURN m2.movie_id as movie2_id, d.point as sim " \
+                        "ORDER BY sim DESC"

@@ -4,7 +4,7 @@
 from src import db
 from src.differential_privacy import exponential_mechanism as em
 
-movie_ids = [1]
+movie_ids = [5952]
 
 
 # expected: expected array with sequence of movie ids

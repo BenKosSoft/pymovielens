@@ -323,11 +323,28 @@ def get_movie_rating_count(movie_id):
 
 
 # get similarities of k-nearest movie by movie id
-def get_similarities_by_movie(movie_id, k_neighbours):
+def get_similarities_by_movie_k_n(movie_id, k_neighbours):
+    result = []
+    with neo4jdriver.session.begin_transaction() as tx:
+        records = tx.run(queries.similarities_by_movie_neighbour,
+                         movie_id=movie_id, k_neighbours=k_neighbours)
+        data = records.data()
+        if not len(data):
+            print "No record!"
+        else:
+            for row in data:
+                movie2_id = row['movie2_id']
+                sim = row['sim']
+                result.append((movie2_id, sim))
+    return result
+
+
+# get similarities by movie id
+def get_similarities_by_movie(movie_id):
     result = []
     with neo4jdriver.session.begin_transaction() as tx:
         records = tx.run(queries.similarities_by_movie,
-                         movie_id=movie_id, k_neighbours=k_neighbours)
+                         movie_id=movie_id)
         data = records.data()
         if not len(data):
             print "No record!"
