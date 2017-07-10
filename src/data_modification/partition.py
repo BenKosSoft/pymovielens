@@ -1,16 +1,13 @@
 import csv
-import os
 import numpy as np
-
-base_dir = "../../res_unshared/"
-subfolder = "ml-mini/"
+from src import paths
 
 _TEST_RATIO = 0.2
 
 
 def partition():
     user_dict = {}
-    with open(base_dir + subfolder + "ratings.csv") as ratings:
+    with open(paths.ratings_mini_csv) as ratings:
         csvr = csv.DictReader(ratings, delimiter=',', quotechar='"')
         for row in csvr:
             index = row["userId"]
@@ -22,9 +19,9 @@ def partition():
     for key in user_dict:
         user_dict[key] = np.round(_TEST_RATIO * user_dict[key])
 
-    with open(base_dir + subfolder + "ratings_test_{}.csv".format(_TEST_RATIO), 'wb') as r_test:
-        with open(base_dir + subfolder + "ratings_train_{}.csv".format(1 - _TEST_RATIO), 'wb') as r_train:
-            with open(base_dir + subfolder + "ratings.csv") as ratings:
+    with open(paths.ratings_mini_test_csv.format(_TEST_RATIO), 'wb') as r_test:
+        with open(paths.ratings_mini_train_csv.format(1 - _TEST_RATIO), 'wb') as r_train:
+            with open(paths.ratings_mini_csv) as ratings:
                 csvr = csv.DictReader(ratings, delimiter=',', quotechar='"')
                 csvw_test = csv.DictWriter(r_test, delimiter=',', quotechar='"', fieldnames=csvr.fieldnames)
                 csvw_train = csv.DictWriter(r_train, delimiter=',', quotechar='"', fieldnames=csvr.fieldnames)

@@ -1,9 +1,9 @@
-from src import db
-from src import utility as util
+# TODO: Movieleri databaseden al
+# TODO: Similarity query'sini kontrol et, (asagidaki fonksyionlari)
 
-k_neighbours = 5
-sensitivity = 1
-epsilon = 0.1
+from src import db
+from src.differential_privacy import exponential_mechanism as em
+
 movie_ids = [1]
 
 
@@ -20,8 +20,8 @@ def benchmark(expected, result):
 def main():
     error = 0
     for movie_id in movie_ids:
-        movies = db.get_similarities_by_movie(movie_id, k_neighbours)
-        new_order = util.get_exponential_recommendation_order(movies, epsilon, sensitivity)
+        movies = db.get_similarities_by_movie(movie_id)
+        new_order = em.get_exponential_recommendation_order(movies)
 
         # change movies array with ids in array
         movies = [m[0] for m in movies]

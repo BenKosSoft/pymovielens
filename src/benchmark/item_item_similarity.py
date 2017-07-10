@@ -1,9 +1,7 @@
 from src import db
+from src import paths
 import csv
 import time
-
-base_dir = "../../res_unshared/"
-subfolder = "ml-mini/"
 
 _TEST_RATIO = 0.2
 _k_neighbours = 5
@@ -15,7 +13,7 @@ def predict(user_id, movie_id):
 
 def avg_error():
     error_sum, count = 0, 0
-    with open(base_dir + subfolder + "ratings_test_{}.csv".format(_TEST_RATIO)) as r_test:
+    with open(paths.ratings_mini_test_csv.format(_TEST_RATIO)) as r_test:
         csvr = csv.DictReader(r_test, delimiter=',', quotechar='"')
         for row in csvr:
             prediction = predict(int(row["userId"]), int(row["movieId"]))

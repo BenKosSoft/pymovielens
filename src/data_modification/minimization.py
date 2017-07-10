@@ -1,17 +1,14 @@
 import csv
 import os
 import operator
-
-base_dir = "../../res_unshared/"
-movie_csv = "../../res_unshared/ml-latest-small/movies.csv"
-rating_csv = "../../res_unshared/ml-latest-small/ratings.csv"
+from src import paths
 
 _movie_count = 10
 
 
 def most_rated_movies():
     movie_dict = {}
-    with open(rating_csv) as ratings:
+    with open(paths.ratings_latest_small_csv) as ratings:
         csvr = csv.DictReader(ratings, delimiter=',', quotechar='"')
         for row in csvr:
             index = row["movieId"]
@@ -46,12 +43,12 @@ def create_new_csv(new_path, movie_dict, old_csv):
 
 
 def main():
-    new_movies_path = base_dir + "ml-mini-small/movies.csv"
-    new_ratings_path = base_dir + "ml-mini-small/ratings.csv"
+    new_movies_path = paths.movies_mini_small_csv
+    new_ratings_path = paths.ratings_mini_small_csv
     movie_dict = dict(most_rated_movies())
 
-    create_new_csv(new_movies_path, movie_dict, movie_csv)
-    create_new_csv(new_ratings_path, movie_dict, rating_csv)
+    create_new_csv(new_movies_path, movie_dict, paths.movies_latest_small_csv)
+    create_new_csv(new_ratings_path, movie_dict, paths.ratings_latest_small_csv)
 
 if __name__ == '__main__':
     main()
