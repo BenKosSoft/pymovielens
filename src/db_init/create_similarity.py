@@ -1,7 +1,8 @@
 import time
-
 from src import db
 from src import utility as util
+
+_record_time = False
 
 
 # item - item collaborative user dependent algorithm by using adjusted cosine similarity
@@ -16,12 +17,10 @@ def item_item_collaborative_user_dependent():
             # check records size, if it is bigger than 10 common user, then continue
             if len(records) < 10:
                 print "Unsufficient Number of Data..."
-                pass
             else:
                 sim = util.calculate_similarity(records, users_rating_avg)
                 # sim = util.calculate_similarity2(records, users_rating_avg)
                 if sim != -1:  # unidentified similarity
-                    pass
                     data.append({"movie1_id": movie_ids[movie1_index],
                                  "movie2_id": movie_ids[movie2_index],
                                  "point": sim})
@@ -39,25 +38,21 @@ def item_item_collaborative_user_dependent():
     print("item_item_collaborative_user_dependent ended!")
 
 
+# by genres etc...
 def item_item_collaborative_user_independent():
     pass
 
 
-start = time.time()
+def create_similarity():
+    item_item_collaborative_user_dependent()
 
-db.create_index("Movie", "movie_id")
-db.create_index("User", "user_id")
 
-db.create_movies()
-# db.create_links()
-db.create_ratings()
-# db.create_tags()
-#
-# db.get_movie_by_id(1)
-# db.get_avg_rating_of_movie(1)
-# db.get_avg_rating_of_user(5)
+if __name__ == '__main__':
+    if _record_time:
+        start = time.time()
 
-item_item_collaborative_user_dependent()
+    create_similarity()
 
-end = time.time()
-print "Execution time: ", end - start
+    if _record_time:
+        end = time.time()
+        print(end - start)
