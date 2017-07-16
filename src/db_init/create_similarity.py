@@ -1,6 +1,6 @@
 import time
 from src import db
-from src import utility as util
+from src.utility import similarity
 
 _record_time = False
 
@@ -16,10 +16,10 @@ def item_item_collaborative_user_dependent():
             records = db.get_by_ratings_movie_ids(movie_ids[movie1_index], movie_ids[movie2_index])
             # check records size, if it is bigger than 10 common user, then continue
             if len(records) < 10:
-                print "Unsufficient Number of Data..."
+                print "Insufficient Number of Data..."
             else:
-                sim = util.calculate_similarity(records, users_rating_avg)
-                # sim = util.calculate_similarity2(records, users_rating_avg)
+                sim = similarity.calculate_similarity(records, users_rating_avg)
+                # sim = similarity.calculate_similarity2(records, users_rating_avg)
                 if sim != -1:  # unidentified similarity
                     data.append({"movie1_id": movie_ids[movie1_index],
                                  "movie2_id": movie_ids[movie2_index],

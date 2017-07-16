@@ -180,10 +180,10 @@ def get_all_movies():
 
 #
 def get_by_ratings_movie_ids(movie1_id, movie2_id):
-    print("get_by_ratings_movie_ids start")
+    # print("get_by_ratings_movie_ids start")
     with neo4jdriver.session.begin_transaction() as tx:
         records = tx.run(queries.movie_movie_query_adjusted_cosine, movie1_id=movie1_id, movie2_id=movie2_id)
-    print("get_by_ratings_movie_ids end")
+    # print("get_by_ratings_movie_ids end")
     return records.data()
 
 
