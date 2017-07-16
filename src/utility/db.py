@@ -1,21 +1,23 @@
 import csv
-import time
 
-from src import queries, paths, neo4jdriver
+from src.strings import queries
+from src.utility import neo4jdriver
 
 _record_time = False
 
 
+# todo: utilize progressBar in this file
+
 # creates indexes for the labels
 def create_index(label, label_id):
-    print("create_index start")
+    print("create_index start")  # todo: use Logger Class
     with neo4jdriver.session.begin_transaction() as tx:
         tx.run(queries.index_query_create.format(label, label_id))
-    print("create_index end")
+    print("create_index end")  # todo: use Logger Class
 
 
 def create_movies(path):
-    print("create_movies start")
+    print("create_movies start")  # todo: use Logger Class
     data = []
     with open(path, 'rb') as movies:
         csvr = csv.DictReader(movies, delimiter=',', quotechar='"')
@@ -30,11 +32,11 @@ def create_movies(path):
         tx.run(queries.movie_query_create, data=data)
         tx.commit()
         del data[:]
-    print("create_movies end")
+    print("create_movies end")  # todo: use Logger Class
 
 
 def create_links(path):
-    print("create_links start")
+    print("create_links start")  # todo: use Logger Class
     data = []
     with open(path, 'rb') as csv_file:
         iter_reader = iter(csv.reader(csv_file, delimiter=',', quotechar='"'))
@@ -50,11 +52,11 @@ def create_links(path):
         tx.run(queries.link_query_create, data=data)
         tx.commit()
         del data[:]
-    print("create_links end")
+    print("create_links end")  # todo: use Logger Class
 
 
 def create_ratings(path):
-    print("create_ratings start")
+    print("create_ratings start")  # todo: use Logger Class
     data = []
     with open(path, 'rb') as ratings:
         csvr = csv.DictReader(ratings, delimiter=',', quotechar='"')
@@ -72,11 +74,11 @@ def create_ratings(path):
         tx.run(queries.rating_query_create, data=data)
         tx.commit()
         del data[:]
-    print("create_ratings end")
+    print("create_ratings end")  # todo: use Logger Class
 
 
 def create_tags(path):
-    print("create_tags start")
+    print("create_tags start")  # todo: use Logger Class
     data = []
     with open(path, 'rb') as csv_file:
         iter_reader = iter(csv.reader(csv_file, delimiter=',', quotechar='"'))
@@ -92,59 +94,59 @@ def create_tags(path):
         tx.run(queries.tag_query_create, data=data)
         tx.commit()
         del data[:]
-    print("create_tags end")
+    print("create_tags end")  # todo: use Logger Class
 
 
 # get movie by id
 def get_movie_by_id(movie_id):
-    print("return_movie start")
+    print("return_movie start")  # todo: use Logger Class
     with neo4jdriver.session.begin_transaction() as tx:
         records = tx.run(queries.movie_query_get_by_id, movie_id=movie_id)
         if not len(records.data()):
-            print "No record!"
+            print "No record!"  # todo: use Logger Class
         else:
             for record in records:
                 title = record[0]["title"]
-                print(title)
-    print("return_movie end")
+                print(title)  # todo: use Logger Class
+    print("return_movie end")  # todo: use Logger Class
 
 
 # get average of ratings of specific movie
 def get_avg_rating_of_movie(movie_id):
-    print("get_avg_rating_of_movie start")
+    print("get_avg_rating_of_movie start")  # todo: use Logger Class
     with neo4jdriver.session.begin_transaction() as tx:
         records = tx.run(queries.movie_query_get_avg_rating, movie_id=movie_id)
         if not len(records.data()):
-            print "No record!"
+            print "No record!"  # todo: use Logger Class
         else:
             for record in records:
                 title = record["title"]
                 avg = record["rating_avg"]
-                print("%s has %s average rating" % (title, avg))
-    print("get_avg_rating_of_movie end")
+                print("%s has %s average rating" % (title, avg))  # todo: use Logger Class
+    print("get_avg_rating_of_movie end")  # todo: use Logger Class
 
 
 # get average of ratings of users
 def get_avg_rating_of_user(user_id):
-    print("get_avg_rating_of_user start")
+    print("get_avg_rating_of_user start")  # todo: use Logger Class
     with neo4jdriver.session.begin_transaction() as tx:
         records = tx.run(queries.user_query_get_avg_rating, user_id=user_id)
         rating_mean = 0
         if not len(records.data()):
-            print "No record!"
+            print "No record!"  # todo: use Logger Class
         else:
             for record in records:
                 # user_id = record["user_id"]
                 rating_mean = record["rating_avg"]
-                # print("%s has %s average rating" % (user_id, rating_mean))
-    print("get_avg_rating_of_user end")
+                # print("%s has %s average rating" % (user_id, rating_mean))  # todo: use Logger Class
+    print("get_avg_rating_of_user end")  # todo: use Logger Class
     return rating_mean
 
 
 # get average of ratings of all users
 def get_avg_rating_of_all_user():
     users_rating_avg = {}
-    # print("get_avg_rating_of_user start")
+    # print("get_avg_rating_of_user start")  # todo: use Logger Class
     with neo4jdriver.session.begin_transaction() as tx:
         records = tx.run(queries.user_query_get_all_avg_rating)
         data = records.data()
@@ -154,18 +156,18 @@ def get_avg_rating_of_all_user():
                 rating_mean = record["rating_avg"]
                 users_rating_avg[user_id] = rating_mean
         else:
-            print "No record!"
-    print("get_avg_rating_of_user end")
+            print "No record!"  # todo: use Logger Class
+    print("get_avg_rating_of_user end")  # todo: use Logger Class
     return users_rating_avg
 
 
 #
 def create_dynamic_similarity(data):
-    print("create_dynamic_similarity start")
+    print("create_dynamic_similarity start")  # todo: use Logger Class
     with neo4jdriver.session.begin_transaction() as tx:
         tx.run(queries.movie_query_create_dynamic_similarity, data=data)
         tx.commit()
-    print("create_dynamic_similarity end")
+    print("create_dynamic_similarity end")  # todo: use Logger Class
 
 
 #
@@ -180,35 +182,35 @@ def get_all_movies():
 
 #
 def get_by_ratings_movie_ids(movie1_id, movie2_id):
-    # print("get_by_ratings_movie_ids start")
+    # print("get_by_ratings_movie_ids start")  # todo: use Logger Class
     with neo4jdriver.session.begin_transaction() as tx:
         records = tx.run(queries.movie_movie_query_adjusted_cosine, movie1_id=movie1_id, movie2_id=movie2_id)
-    # print("get_by_ratings_movie_ids end")
+    # print("get_by_ratings_movie_ids end")  # todo: use Logger Class
     return records.data()
 
 
 # get count of movie
 def get_movie_ids():
-    print("get_movie_count start")
+    print("get_movie_count start")  # todo: use Logger Class
     data = []
     with neo4jdriver.session.begin_transaction() as tx:
         records = tx.run(queries.movie_query_get_all_movie_ids)
         for record in records:
             data.append(record["movie_id"])
-    print("get_movie_count end")
+    print("get_movie_count end")  # todo: use Logger Class
     return data
 
 
 # returns list of (otherMovieId, similarity) of movie
 def get_prediction_by_user_and_movie_id(user_id, movie_id, k_neighbours=5):
-    print("get_prediction_by_user_and_movie_id start")
+    print("get_prediction_by_user_and_movie_id start")  # todo: use Logger Class
     prediction = -1
     with neo4jdriver.session.begin_transaction() as tx:
         records = tx.run(queries.user_movie_query_get_prediction,
                          movie_id=movie_id, user_id=user_id, k_neighbours=k_neighbours)
         for record in records:
             prediction = record["prediction"]
-    print("get_prediction_by_user_and_movie_id end")
+    print("get_prediction_by_user_and_movie_id end")  # todo: use Logger Class
     return prediction
 
 
@@ -219,7 +221,7 @@ def get_movie_rating_count(movie_id):
         records = tx.run(queries.movie_rating_count_query_by_id, movie_id=movie_id)
         data = records.data()
         if not len(data):
-            print "No record!"
+            print "No record!"  # todo: use Logger Class
         else:
             count = data[0]['count']
     return count
@@ -233,7 +235,7 @@ def get_similarities_by_movie_k_n(movie_id, k_neighbours):
                          movie_id=movie_id, k_neighbours=k_neighbours)
         data = records.data()
         if not len(data):
-            print "No record!"
+            print "No record!"  # todo: use Logger Class
         else:
             for row in data:
                 movie2_id = row['movie2_id']
@@ -250,7 +252,7 @@ def get_similarities_by_movie(movie_id):
                          movie_id=movie_id)
         data = records.data()
         if not len(data):
-            print "No record!"
+            print "No record!"  # todo: use Logger Class
         else:
             for row in data:
                 movie2_id = row['movie2_id']

@@ -1,7 +1,8 @@
 import csv
-import os
 import operator
-from src import paths
+import os
+
+from src.strings import paths
 
 _movie_count = 10
 
