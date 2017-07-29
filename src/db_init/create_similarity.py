@@ -1,13 +1,13 @@
 import time
 
-from src.utility import similarity, db
+from src.utility import similarity, db, logger as log
 
 _record_time = False
 
 
 # item - item collaborative user dependent algorithm by using adjusted cosine similarity
 def item_item_collaborative_user_dependent():
-    print("item_item_collaborative_user_dependent started!")  # todo: use Logger Class
+    log.info('item_item_collaborative_user_dependent started!')
     users_rating_avg = db.get_avg_rating_of_all_user()
     movie_ids = db.get_movie_ids()
     data = []
@@ -16,7 +16,7 @@ def item_item_collaborative_user_dependent():
             records = db.get_by_ratings_movie_ids(movie_ids[movie1_index], movie_ids[movie2_index])
             # check records size, if it is bigger than 10 common user, then continue
             if len(records) < 10:
-                print "Insufficient Number of Data..."  # todo: use Logger Class
+                log.warning('Insufficient Number of Data...')
             else:
                 sim = similarity.calculate_similarity(records, users_rating_avg)
                 # sim = similarity.calculate_similarity2(records, users_rating_avg)
@@ -24,18 +24,17 @@ def item_item_collaborative_user_dependent():
                     data.append({"movie1_id": movie_ids[movie1_index],
                                  "movie2_id": movie_ids[movie2_index],
                                  "point": sim})
-                    # print movie1_id, movie2_id, sim  # todo: use Logger Class
                     if len(data) == 10000:
                         db.create_dynamic_similarity(data)
                         del data[:]
                 else:
                     # divide by zero exception
-                    print "divide by zero"  # todo: use Logger Class
+                    log.warning('divide by zero exception')
     # put remaining data on database
     if len(data) > 0:
         db.create_dynamic_similarity(data)
         del data[:]
-    print("item_item_collaborative_user_dependent ended!")  # todo: use Logger Class
+    log.info('item_item_collaborative_user_dependent ended!')
 
 
 # by genres etc...
@@ -55,4 +54,4 @@ if __name__ == '__main__':
 
     if _record_time:
         end = time.time()
-        print(end - start)  # todo: use Logger Class
+        log.info(end - start)

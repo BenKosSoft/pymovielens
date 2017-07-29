@@ -1,7 +1,7 @@
 import time
 
 from src.strings import paths
-from src.utility import db
+from src.utility import db, logger as log
 
 _record_time = False
 
@@ -43,4 +43,4 @@ if __name__ == '__main__':
 
     if _record_time:
         end = time.time()
-        print(end - start)  # todo: use Logger Class
+        log.info(end - start)
