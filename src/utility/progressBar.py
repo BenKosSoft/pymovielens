@@ -6,7 +6,7 @@ class ProgressBar:
     Helper class to create a terminal progress bar
     """
 
-    def __init__(self, total, prefix='', suffix='', decimals=1, bar_length=100, fill='#'):
+    def __init__(self, total, prefix='', suffix='', decimals=1, bar_length=50, fill='#'):
         """
         Initialize the progressBar
         :param total:      (Required) total iterations, the goal
@@ -28,7 +28,6 @@ class ProgressBar:
         """
         Update the completed percentage and update the progress bar on the terminal
         :param progress: (Required) amount of progress
-        :return:
         """
         if self.__completed != self.__total:
             # update completed iteration count
@@ -47,13 +46,13 @@ class ProgressBar:
         sys.stdout.flush()
 
 
-def test():
+def _test():
     from time import sleep
 
     items = list(range(0, 57))
     l = len(items)
 
-    pb = ProgressBar(l, 'Progress', 'Complete', bar_length=50)
+    pb = ProgressBar(l, 'Progress', 'Complete')
 
     for _, _ in enumerate(items):
         sleep(0.25)
@@ -61,4 +60,4 @@ def test():
 
 
 if __name__ == '__main__':
-    test()
+    _test()
