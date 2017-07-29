@@ -12,7 +12,7 @@ tag_query_create = "UNWIND {data} as d " \
                    "MERGE (u)-[:tags {tag:d.tag, time:d.timestamp}]->(m)"
 movie_query_get_by_id = "MATCH (m:Movie) " \
                         "WHERE m.movie_id = {movie_id}" \
-                        "RETURN m"
+                        "RETURN m.title as title, m.genres as genres"
 index_query_create = "CREATE INDEX ON :{}({})"
 movie_query_get_avg_rating = "MATCH (m:Movie)<-[r:rates]-(u:User)" \
                              "WHERE m.movie_id = {movie_id}" \

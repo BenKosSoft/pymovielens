@@ -2,7 +2,8 @@
 # TODO: Similarity query'sini kontrol et, (asagidaki fonksyionlari)
 
 from src.differential_privacy.exponential_mechanism import *
-from src.utility import db
+from src.utility import db, logger as log
+
 
 movie_ids = [5952]
 
@@ -26,11 +27,12 @@ def main():
 
         # change movies array with ids in array
         movies = [m[0] for m in movies]
-        print movies, new_order  # todo: use Logger Class
+        log.debug(movies)
+        log.debug(new_order)
 
         error += benchmark(movies, new_order.tolist())
 
-    print "Error is ", error  # todo: use Logger Class
+    log.info('Error is ' + error)
 
 
 if __name__ == '__main__':
