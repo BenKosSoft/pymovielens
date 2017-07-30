@@ -1,45 +1,93 @@
 import logging
 import time
 import datetime
-
-# filename as a timestamp
-_date_str = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H.%M.%S')
-_filename = '../.log/{}.log'.format(_date_str)
-
-# logging level
-_level = logging.DEBUG
-
-# configuration logging
-logging.basicConfig(filename=_filename, level=_level)
+import os
+from src.strings import paths
 
 
-# logging functions
-# they get message and logs
-def info(message):
-    logging.info(message)
-
-
-def debug(message):
-    logging.debug(message)
-
-
-def warning(message):
-    logging.warning(message)
-
-
-def error(message):
-    logging.error(message)
-
-
-def critical(message):
-    logging.critical(message)
-
-
-# utility functions logger
-def change_level(level):
+class Logger:
     """
-    change logging level of logger
-    :param level: new level to be set to logger
-    :return: nothing
+    Logger class which log every information on log file
+    depends on logging level.
     """
-    logging.getLogger().setLevel(level)
+
+    def __init__(self):
+        # directory path
+        __path = os.path.join(paths.project, '.log')
+
+        # create .log directory if not exists
+        self.__make_dir(__path)
+
+        # filename as a timestamp
+        __date_str = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H.%M')
+        __filename = '{}.log'.format(__date_str)
+
+        # logging level
+        # change it if you want to change logging level of Logger
+        __level = logging.DEBUG
+
+        # configuration logging
+        logging.basicConfig(filename=os.path.join(__path, __filename), level=__level)
+
+    # ==================================================================================================================
+    # Public
+    # ==================================================================================================================
+    @staticmethod
+    def debug(message):
+        """
+        logs debug messages, level:0
+        :param message: that will log
+        """
+        logging.info(message)
+
+    @staticmethod
+    def info(message):
+        """
+        logs informative messages, level:1
+        :param message: that will log
+        """
+        logging.info(message)
+
+    @staticmethod
+    def warning(message):
+        """
+        logs warning messages, level:2
+        :param message: that will log
+        """
+        logging.info(message)
+
+    @staticmethod
+    def error(message):
+        """
+        logs error messages, level:3
+        :param message: that will log
+        """
+        logging.info(message)
+
+    @staticmethod
+    def critical(message):
+        """
+        logs important error (critical) messages, level:4
+        :param message: that will log
+        """
+        logging.info(message)
+
+    @staticmethod
+    def change_level(level):
+        """
+        change logging level of logger
+        :param level: new level to be set to logger
+        """
+        logging.getLogger().setLevel(level)
+
+    # ==================================================================================================================
+    # Private
+    # ==================================================================================================================
+    @staticmethod
+    def __make_dir(path):
+        if not os.path.isdir(path):
+            try:
+                os.makedirs(path)
+                print path + ' is created.'
+            except WindowsError:
+                print 'Something wrong creating directory!'

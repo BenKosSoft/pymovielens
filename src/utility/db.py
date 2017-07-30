@@ -1,20 +1,24 @@
 import csv
 
 from src.strings import queries
-from src.utility import neo4jdriver, logger as log
+from src.utility import neo4jdriver
+from src.utility.logger import Logger
+
+# logger
+__log = Logger()
 
 
 # todo: utilize progressBar in this file
 
 # creates indexes for the labels
 def create_index(label, label_id):
-    log.info("create_index start for " + label + ":" + label_id)
+    __log.info("create_index start for " + label + ":" + label_id)
     with neo4jdriver.session.begin_transaction() as tx:
-        tx.run(queries.index_query_create.format(label, label_id))
+            tx.run(queries.index_query_create.format(label, label_id))
 
 
 def create_movies(path):
-    log.info("create_movies start")
+    __log.info("create_movies start")
     data = []
     with open(path, 'rb') as movies:
         csvr = csv.DictReader(movies, delimiter=',', quotechar='"')
@@ -32,7 +36,7 @@ def create_movies(path):
 
 
 def create_links(path):
-    log.info("create_links start")
+    __log.info("create_links start")
     data = []
     with open(path, 'rb') as csv_file:
         iter_reader = iter(csv.reader(csv_file, delimiter=',', quotechar='"'))
@@ -51,7 +55,7 @@ def create_links(path):
 
 
 def create_ratings(path):
-    log.info("create_ratings start")
+    __log.info("create_ratings start")
     data = []
     with open(path, 'rb') as ratings:
         csvr = csv.DictReader(ratings, delimiter=',', quotechar='"')
@@ -72,7 +76,7 @@ def create_ratings(path):
 
 
 def create_tags(path):
-    log.info("create_tags start")
+    __log.info("create_tags start")
     data = []
     with open(path, 'rb') as csv_file:
         iter_reader = iter(csv.reader(csv_file, delimiter=',', quotechar='"'))
@@ -92,12 +96,12 @@ def create_tags(path):
 
 # get movie by id
 def get_movie_by_id(movie_id):
-    log.info("return_movie start")
+    __log.info("return_movie start")
     with neo4jdriver.session.begin_transaction() as tx:
         records = tx.run(queries.movie_query_get_by_id, movie_id=movie_id)
         data = records.data()
         if len(data) == 0:
-            log.warning("No record in get_movie_by_id: " + movie_id)
+            __log.warning("No record in get_movie_by_id: " + movie_id)
         else:
             row = data[0]
             title = row["title"]
@@ -107,11 +111,11 @@ def get_movie_by_id(movie_id):
 
 # get average of ratings of specific movie
 def get_avg_rating_of_movie(movie_id):
-    log.info("get_avg_rating_of_movie start")
+    __log.info("get_avg_rating_of_movie start")
     with neo4jdriver.session.begin_transaction() as tx:
         data = tx.run(queries.movie_query_get_avg_rating, movie_id=movie_id).data()
         if len(data) == 0:
-            log.warning("No record in get_avg_rating_of_movie: " + movie_id)
+            __log.warning("No record in get_avg_rating_of_movie: " + movie_id)
         else:
             row = data[0]
             title = row["title"]
@@ -121,11 +125,11 @@ def get_avg_rating_of_movie(movie_id):
 
 # get average of ratings of users
 def get_avg_rating_of_user(user_id):
-    log.info("get_avg_rating_of_user start: " + user_id)
+    __log.info("get_avg_rating_of_user start: " + user_id)
     with neo4jdriver.session.begin_transaction() as tx:
         data = tx.run(queries.user_query_get_avg_rating, user_id=user_id).data()
         if len(data) == 0:
-            log.warning("No record in get_avg_rating_of_user: " + user_id)
+            __log.warning("No record in get_avg_rating_of_user: " + user_id)
         else:
             row = data[0]
             rating_mean = row["rating_avg"]
@@ -134,12 +138,12 @@ def get_avg_rating_of_user(user_id):
 
 # get average of ratings of all users
 def get_avg_rating_of_all_user():
-    log.info("get_avg_rating_of_user start")
+    __log.info("get_avg_rating_of_user start")
     users_rating_avg = {}
     with neo4jdriver.session.begin_transaction() as tx:
         data = tx.run(queries.user_query_get_all_avg_rating).data()
         if len(data) == 0:
-            log.warning("No record in get_avg_rating_of_user")
+            __log.warning("No record in get_avg_rating_of_user")
         else:
             for row in data:
                 user_id = row["user_id"]
@@ -150,11 +154,11 @@ def get_avg_rating_of_all_user():
 
 #
 def create_dynamic_similarity(data):
-    log.info("create_dynamic_similarity start")
+    __log.info("create_dynamic_similarity start")
     with neo4jdriver.session.begin_transaction() as tx:
         tx.run(queries.movie_query_create_dynamic_similarity, data=data)
         tx.commit()
-    log.info("create_dynamic_similarity end")
+    __log.info("create_dynamic_similarity end")
 
 
 #
@@ -169,7 +173,7 @@ def get_all_movies():
 
 #
 def get_by_ratings_movie_ids(movie1_id, movie2_id):
-    log.info("get_by_ratings_movie_ids start: " + movie1_id + ", " + movie2_id)
+    __log.info("get_by_ratings_movie_ids start: " + movie1_id + ", " + movie2_id)
     with neo4jdriver.session.begin_transaction() as tx:
         data = tx.run(queries.movie_movie_query_adjusted_cosine,
                       movie1_id=movie1_id, movie2_id=movie2_id).data()
@@ -178,7 +182,7 @@ def get_by_ratings_movie_ids(movie1_id, movie2_id):
 
 # get count of movie
 def get_movie_ids():
-    log.info("get_movie_count start")
+    __log.info("get_movie_count start")
     result = []
     with neo4jdriver.session.begin_transaction() as tx:
         data = tx.run(queries.movie_query_get_all_movie_ids).data()
@@ -189,8 +193,8 @@ def get_movie_ids():
 
 # returns list of (otherMovieId, similarity) of movie
 def get_prediction_by_user_and_movie_id(user_id, movie_id, k_neighbours=5):
-    log.info("get_prediction_by_user_and_movie_id start: {}-{}-{}"
-             .format(user_id, movie_id, k_neighbours))
+    __log.info("get_prediction_by_user_and_movie_id start: {}-{}-{}"
+               .format(user_id, movie_id, k_neighbours))
     prediction = -1
     with neo4jdriver.session.begin_transaction() as tx:
         records = tx.run(queries.user_movie_query_get_prediction,
@@ -206,7 +210,7 @@ def get_movie_rating_count(movie_id):
     with neo4jdriver.session.begin_transaction() as tx:
         data = tx.run(queries.movie_rating_count_query_by_id, movie_id=movie_id).data()
         if len(data) == 0:
-            log.warning("No record in get_movie_rating_count: " + movie_id)
+            __log.warning("No record in get_movie_rating_count: " + movie_id)
         else:
             row = data[0]
             count = row['count']
@@ -220,8 +224,8 @@ def get_similarities_by_movie_k_n(movie_id, k_neighbours):
         data = tx.run(queries.similarities_by_movie_neighbour,
                       movie_id=movie_id, k_neighbours=k_neighbours).data()
         if len(data) <= 0:
-            log.warning("No record in get_similarities_by_movie_k_n: {}-{}"
-                        .format(movie_id, k_neighbours))
+            __log.warning("No record in get_similarities_by_movie_k_n: {}-{}"
+                          .format(movie_id, k_neighbours))
         else:
             for row in data:
                 movie2_id = row['movie2_id']
@@ -237,8 +241,8 @@ def get_similarities_by_movie(movie_id):
         data = tx.run(queries.similarities_by_movie,
                       movie_id=movie_id).data()
         if len(data) == 0:
-            log.warning("No record in get_similarities_by_movie: {}"
-                        .format(movie_id))
+            __log.warning("No record in get_similarities_by_movie: {}"
+                          .format(movie_id))
         else:
             for row in data:
                 movie2_id = row['movie2_id']

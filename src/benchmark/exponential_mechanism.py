@@ -4,7 +4,7 @@
 from src.differential_privacy.exponential_mechanism import *
 from src.utility import db, logger as log
 
-
+db._log.info()
 movie_ids = [5952]
 
 
