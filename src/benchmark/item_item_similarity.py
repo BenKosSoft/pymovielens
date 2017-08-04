@@ -1,7 +1,8 @@
-from src import db
-from src import paths
 import csv
 import time
+
+from src.strings import paths
+from src.utility import db, logger as log
 
 _TEST_RATIO = 0.2
 _k_neighbours = 5
@@ -27,5 +28,5 @@ if __name__ == '__main__':
     start = time.time()
     error = avg_error()
     end = time.time()
-    print 'Mean Average Error is', error
-    print "Execution time: ", end - start
+    log.info('Mean Average Error is ' + str(error))
+    log.info('Execution time: ' + str(end - start))

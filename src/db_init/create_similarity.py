@@ -1,13 +1,18 @@
 import time
-from src import db
-from src import utility as util
 
-_record_time = False
+from src.utility import similarity, db
+from src.utility.logger import Logger
+
+# logger
+__log = Logger()
+
+# time recording
+__record_time = False
 
 
 # item - item collaborative user dependent algorithm by using adjusted cosine similarity
 def item_item_collaborative_user_dependent():
-    print("item_item_collaborative_user_dependent started!")
+    __log.info('item_item_collaborative_user_dependent started!')
     users_rating_avg = db.get_avg_rating_of_all_user()
     movie_ids = db.get_movie_ids()
     data = []
@@ -16,26 +21,25 @@ def item_item_collaborative_user_dependent():
             records = db.get_by_ratings_movie_ids(movie_ids[movie1_index], movie_ids[movie2_index])
             # check records size, if it is bigger than 10 common user, then continue
             if len(records) < 10:
-                print "Unsufficient Number of Data..."
+                __log.warning('Insufficient Number of Data...')
             else:
-                sim = util.calculate_similarity(records, users_rating_avg)
-                # sim = util.calculate_similarity2(records, users_rating_avg)
+                sim = similarity.calculate_similarity(records, users_rating_avg)
+                # sim = similarity.calculate_similarity2(records, users_rating_avg)
                 if sim != -1:  # unidentified similarity
                     data.append({"movie1_id": movie_ids[movie1_index],
                                  "movie2_id": movie_ids[movie2_index],
                                  "point": sim})
-                    # print movie1_id, movie2_id, sim
                     if len(data) == 10000:
                         db.create_dynamic_similarity(data)
                         del data[:]
                 else:
                     # divide by zero exception
-                    print "divide by zero"
+                    __log.warning('divide by zero exception')
     # put remaining data on database
     if len(data) > 0:
         db.create_dynamic_similarity(data)
         del data[:]
-    print("item_item_collaborative_user_dependent ended!")
+    __log.info('item_item_collaborative_user_dependent ended!')
 
 
 # by genres etc...
@@ -48,11 +52,11 @@ def create_similarity():
 
 
 if __name__ == '__main__':
-    if _record_time:
+    if __record_time:
         start = time.time()
 
     create_similarity()
 
-    if _record_time:
+    if __record_time:
         end = time.time()
-        print(end - start)
+        __log.info(end - start)

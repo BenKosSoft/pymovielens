@@ -1,7 +1,13 @@
-from src import db
-from src import paths
 import time
 
+from src.strings import paths
+from src.utility import db
+from src.utility.logger import Logger
+
+# logger
+__log = Logger()
+
+# time recording
 _record_time = False
 
 
@@ -42,4 +48,4 @@ if __name__ == '__main__':
 
     if _record_time:
         end = time.time()
-        print(end - start)
+        __log.info('CREATE_DB takes ' + str(end - start) + ' seconds')

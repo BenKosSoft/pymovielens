@@ -1,6 +1,8 @@
 import csv
+
 import numpy as np
-from src import paths
+
+from src.strings import paths
 
 _TEST_RATIO = 0.2
 

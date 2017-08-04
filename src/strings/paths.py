@@ -1,3 +1,5 @@
+import os
+
 # CSV FILES AVAILABLE ON GOOGLE DRIVE
 # https://drive.google.com/drive/folders/0ByD4DTHq_FmOSy0xSnc3eG5qS00?usp=sharing
 
@@ -24,3 +26,8 @@ movies_latest_small_csv = "../../res_unshared/ml-latest-small/movies.csv"
 ratings_latest_small_csv = "../../res_unshared/ml-latest-small/ratings.csv"
 links_latest_small_csv = "../../res_unshared/ml-latest-small/links.csv"
 tags_latest_small_csv = "../../res_unshared/ml-latest-small/tags.csv"
+
+# PROJECT DIRECTORY PATHS
+strings = os.path.dirname(os.path.abspath(__file__))
+src = os.path.dirname(strings)
+project = os.path.dirname(src)

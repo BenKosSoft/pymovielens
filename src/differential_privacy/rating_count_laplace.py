@@ -1,15 +1,30 @@
 import numpy as np
-from src import db
-
-# differentially private count query
-_sensitivity = 1
-_epsilon = 0.1
-_scale = _sensitivity / _epsilon
-_rand = np.random
+from src.utility import db
 
 
-# dif private count movie rating by movie id
-def get_private_count(movie_id):
-    movie_rating_count = db.get_movie_rating_count(movie_id)
-    noisy_count = _rand.laplace(scale=_scale) + movie_rating_count
-    return movie_rating_count, noisy_count
+class LaplaceMechanism:
+    """
+    Laplace mechanism for differentially private applications
+    """
+
+    # ==================================================================================================================
+    # Private
+    # ==================================================================================================================
+    def __init__(self, sensitivity=1, epsilon=0.1):
+        """
+        Initialize privatization parameters to apply laplace mechanism functionalities
+        :param sensitivity:  Sensitivity coefficient
+        :param epsilon:      Epsilon value for, epsilon-differentially private queries
+        """
+        self.__sensitivity = sensitivity
+        self.__epsilon = epsilon
+        self.__scale = self.__sensitivity / self.__epsilon
+        self.__rand = np.random
+
+    # ==================================================================================================================
+    # Public
+    # ==================================================================================================================
+    def get_private_count(self, movie_id):
+        movie_rating_count = db.get_movie_rating_count(movie_id)
+        noisy_count = self.__rand.laplace(scale=self.__scale) + movie_rating_count
+        return movie_rating_count, noisy_count
