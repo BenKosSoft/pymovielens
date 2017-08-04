@@ -26,7 +26,6 @@ class ExponentialMechanism:
         self.__epsilon = epsilon
         self.__gamma = gamma  # todo: calculate gamma value with formula
         self.__new_movies = None
-        self.__threshold = -1
 
     def __pre_processing(self, movies):
         """
@@ -40,9 +39,9 @@ class ExponentialMechanism:
 
         # truncate
         kth_similarity = movies[self.__k_neighbours - 1][1]
-        self.__threshold = kth_similarity - self.__gamma
+        threshold = kth_similarity - self.__gamma
         for (i, sim) in movies:
-            if sim >= self.__threshold:  # new movies
+            if sim >= threshold:  # new movies
                 element = np.array([i, sim], np.float)
                 if len(self.__new_movies) == 0:
                     self.__new_movies = np.append(self.__new_movies, element)
@@ -50,14 +49,15 @@ class ExponentialMechanism:
                     self.__new_movies = np.vstack((self.__new_movies, element))
             else:  # low frequent movies
                 if len(_low_freq_movies) == 0:
-                    _low_freq_movies = np.array([[i], self.__threshold])
+                    _low_freq_movies = np.array([[i], threshold])
                 else:
                     _low_freq_movies[0].append(i)
 
         self.__new_movies = np.vstack((self.__new_movies, _low_freq_movies))
 
         # prepare data (format : [...[movie_id, similarity, exp_data, after_total_exp_data]...])
-        exp_coefficient = self.__epsilon / (4 * self.__k_neighbours * self.__sensitivity)
+        # todo: replace arbitrary scaling factor (10000) with a calculated value
+        exp_coefficient = self.__epsilon * 10000 / (4 * self.__k_neighbours * self.__sensitivity)
         exp_data = np.array([], np.float)
         after_total_exp_data = np.array([], np.float)
         for movie in self.__new_movies:
@@ -101,20 +101,20 @@ class ExponentialMechanism:
         output, chosen_low_freq = None, None
 
         for i in range(self.__k_neighbours):
-            is_data_exhausted = False
-            j = 1
-            while not is_data_exhausted:
+            is_picked = False
+            j = 0
+            while not is_picked:
                 # take random boolean result using calculated probabilities
                 # todo: update indices with name
                 is_chosen = np.random.binomial(1, self.__new_movies[j][2] / self.__new_movies[j][3])
 
                 if j == len(self.__new_movies) - 1:
-                    is_data_exhausted = True
+                    is_picked = True
 
                     # chose from unchosen low frequency items
-                    choice = np.random.choice(self.__new_movies[-1], 1)
                     # todo: update indices with names
-                    output_item = np.array([(choice[0], self.__threshold)],
+                    choice = np.random.choice(self.__new_movies[-1][0], 1)
+                    output_item = np.array([(choice[0], self.__new_movies[-1][1])],
                                            dtype=[('movie_id', np.int32), ('similarity', np.float32)])
 
                     if output is None:
@@ -146,7 +146,9 @@ class ExponentialMechanism:
                     self.__update_total_exp(j)
 
                     # remove chosen element from array
-                    np.delete(self.__new_movies, j, 0)
+                    self.__new_movies = np.delete(self.__new_movies, j, 0)
+
+                    is_picked = True
 
                 j = j + 1
 
@@ -181,7 +183,8 @@ class ExponentialMechanism:
             sampled = self.__sampling_weighted_random()
         else:
             msg = 'Unexpected sampling type: "' + sampling_type + '"'
-            print msg
+            print msg  # todo: use Logger Class
             raise ValueError(msg)
 
-        return self.__perturbation(sampled)
+        self.__perturbation(sampled)
+        return sampled

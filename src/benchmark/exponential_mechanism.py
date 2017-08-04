@@ -2,9 +2,10 @@
 # TODO: Similarity query'sini kontrol et, (asagidaki fonksyionlari)
 
 from src.differential_privacy.exponential_mechanism import *
-from src.utility import db, logger as log
+from src.utility import db
+from src.utility.logger import *
 
-db._log.info()
+log = Logger()
 movie_ids = [5952]
 
 
