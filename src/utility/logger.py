@@ -29,6 +29,9 @@ class Logger:
         # configuration logging
         logging.basicConfig(filename=os.path.join(__path, __filename), level=__level)
 
+        # change level of other libraries logger
+        self.change_level("neo4j.bolt", logging.WARNING)
+
     # ==================================================================================================================
     # Public
     # ==================================================================================================================
@@ -73,12 +76,13 @@ class Logger:
         logging.info(message)
 
     @staticmethod
-    def change_level(level):
+    def change_level(logger_name, level):
         """
         change logging level of logger
+        :param logger_name: logger that is changing level
         :param level: new level to be set to logger
         """
-        logging.getLogger().setLevel(level)
+        logging.getLogger(logger_name).setLevel(level)
 
     # ==================================================================================================================
     # Private

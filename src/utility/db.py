@@ -1,8 +1,9 @@
 import csv
 
 from src.strings import queries
-from src.utility import neo4jdriver
+from src.utility import neo4jdriver, file
 from src.utility.logger import Logger
+from src.utility.progressBar import ProgressBar
 
 # logger
 __log = Logger()
@@ -18,21 +19,27 @@ def create_index(label, label_id):
 
 
 def create_movies(path):
+    movie_count = file.count_row_csv(path)
+    pb = ProgressBar(movie_count, 'Movie Creation', 'Complete')
+    batch = 10000
+
     __log.info("create_movies start")
     data = []
     with open(path, 'rb') as movies:
         csvr = csv.DictReader(movies, delimiter=',', quotechar='"')
         for row in csvr:
             data.append({"movie_id": int(row['movieId']), "title": row['title'], "genres": row['genres']})
-            if len(data) == 10000:
+            if len(data) == batch:
                 with neo4jdriver.session.begin_transaction() as tx:
                     tx.run(queries.movie_query_create, data=data)
                     tx.commit()
-                    del data[:]
+                pb.print_progress(batch)
+                del data[:]
     with neo4jdriver.session.begin_transaction() as tx:
         tx.run(queries.movie_query_create, data=data)
         tx.commit()
-        del data[:]
+    pb.print_progress(len(data))
+    del data[:]
 
 
 def create_links(path):
@@ -56,6 +63,10 @@ def create_links(path):
 
 def create_ratings(path):
     __log.info("create_ratings start")
+    rating_count = file.count_row_csv(path)
+    pb = ProgressBar(rating_count, 'Rating Creation', 'Complete')
+    batch = 10000
+
     data = []
     with open(path, 'rb') as ratings:
         csvr = csv.DictReader(ratings, delimiter=',', quotechar='"')
@@ -64,15 +75,17 @@ def create_ratings(path):
                          "user_id": int(row['userId']),
                          "rating": float(row['rating']),
                          "timestamp": row['timestamp']})
-            if len(data) == 10000:
+            if len(data) == batch:
                 with neo4jdriver.session.begin_transaction() as tx:
                     tx.run(queries.rating_query_create, data=data)
                     tx.commit()
-                    del data[:]
+                pb.print_progress(batch)
+                del data[:]
     with neo4jdriver.session.begin_transaction() as tx:
         tx.run(queries.rating_query_create, data=data)
         tx.commit()
-        del data[:]
+    pb.print_progress(len(data))
+    del data[:]
 
 
 def create_tags(path):
@@ -173,7 +186,7 @@ def get_all_movies():
 
 #
 def get_by_ratings_movie_ids(movie1_id, movie2_id):
-    __log.info("get_by_ratings_movie_ids start: " + movie1_id + ", " + movie2_id)
+    __log.info("get_by_ratings_movie_ids start: %f, %f" % (movie1_id, movie2_id))
     with neo4jdriver.session.begin_transaction() as tx:
         data = tx.run(queries.movie_movie_query_adjusted_cosine,
                       movie1_id=movie1_id, movie2_id=movie2_id).data()

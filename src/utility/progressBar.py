@@ -24,6 +24,7 @@ class ProgressBar:
         self.__bar_length = bar_length
         self.__fill = fill
 
+    # TODO: if prefix is different use different progress bar
     def print_progress(self, progress):
         """
         Update the completed percentage and update the progress bar on the terminal

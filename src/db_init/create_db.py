@@ -1,4 +1,5 @@
 import time
+import sys
 
 from src.strings import paths
 from src.utility import db
@@ -8,7 +9,7 @@ from src.utility.logger import Logger
 __log = Logger()
 
 # time recording
-_record_time = False
+__record_time = True
 
 
 def create_indexes():
@@ -41,11 +42,12 @@ def create_database():
 
 
 if __name__ == '__main__':
-    if _record_time:
+    if __record_time:
         start = time.time()
 
     create_database()
 
-    if _record_time:
+    if __record_time:
         end = time.time()
-        __log.info('CREATE_DB takes ' + str(end - start) + ' seconds')
+        __log.info('CREATE_DB takes %f seconds' % (end-start))
+        sys.stdout.write('\nCREATE_DB takes %f seconds\n\n' % (end-start))
