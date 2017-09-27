@@ -2,6 +2,11 @@
 
 Applying *differential privacy* to movie recommendation system to guarantee the privacy of individual user ratings.
 
+**Implemented By:**
+
+* @mertkosan
+* @mbenlioglu
+
 ## About
 
 Consider a trusted 3rd party that holds a statistical database of sensitive and private information (e.g. movie ratings, medical records, e-mail patterns) that would like to
