@@ -2,7 +2,7 @@
 
 Applying *differential privacy* to movie recommendation system to guarantee the privacy of individual user ratings.
 
-### About
+## About
 
 Consider a trusted 3rd party that holds a statistical database of sensitive and private information (e.g. movie ratings, medical records, e-mail patterns) that would like to
 provide global, statistical information about the data for helpful applications and researches. 
@@ -15,16 +15,16 @@ Differential privacy aims to provide means to maximize the accuracy of these sta
 to real data so that, adding or removing one user to database does not make noticeable difference in the data, thus preventing to identify his/her private information. It is
 a probabilistic concept, therefore, any differentially private mechanism is necessarily randomized with Laplace mechanism, exponential mechanism etc.
 
+
 **More Formally:**
 ___
 Let ε be a positive real number and A be a randomized algorithm that takes a dataset as input (representing the actions of the trusted party holding the data). The algorithm A
 is ε-differentially private if for all datasets 𝐷_1 and 𝐷_2 that differ on a single element (i.e., the data of one person), and all subsets S of image of A.
-```
-𝑃𝑟[𝐴(𝐷_1 )  ∈𝑆]≤𝑒^"ε"   ×𝑃𝑟[𝐴(𝐷_2 )∈𝑆]
-where the probability is taken over the randomness used by the algorithm.
-```
 
-### Movie Recommendation
+![ε-differential privacy formula](/docs/formula.png)
+where the probability is taken over the randomness used by the algorithm.
+
+## Movie Recommendation
 
 In the scope of this project a [movie ratings dataset](https://grouplens.org/datasets/movielens/) has been considered, and by using the ratings of the users, most similar movies to user’s ratings is determined and
 a suitable recommendation is done from the ones among them.
@@ -37,7 +37,7 @@ Here is a snapshot from shrunk version of the database to give insight about the
 edges are rating relations between users and movies.
 
 
-### Experimental Test Results
+## Experimental Test Results
 
 To test the accuracy of our algorithms, we perepared some test queries and retrived the experimental reults to compare and measure the error of the algortihm, from which we have
 determined privacy/utility ratio to decide whether the error is within an acceptable range.
