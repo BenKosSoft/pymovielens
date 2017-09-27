@@ -22,6 +22,7 @@ Let ε be a positive real number and A be a randomized algorithm that takes a da
 is ε-differentially private if for all datasets 𝐷_1 and 𝐷_2 that differ on a single element (i.e., the data of one person), and all subsets S of image of A.
 
 ![ε-differential privacy formula](/docs/formula.png)
+
 where the probability is taken over the randomness used by the algorithm.
 
 ## Movie Recommendation
@@ -32,7 +33,8 @@ a suitable recommendation is done from the ones among them.
 To process this dataset, a graph database has been used ([Neo4j](https://neo4j.com/)) with nodes to represent users and movies, and edges between them to represent the rating the a user gives to
 a movie as well as the calculated similarity score between two movies.
 
-![Graph Database Snapshot](/docs/sampledb.png)
+![Graph Database Snapshot](/docs/sampleGraphDb.png)
+
 Here is a snapshot from shrunk version of the database to give insight about the representation of the data. Blue nodes are anonymized users, green nodes are movies and the
 edges are rating relations between users and movies.
 
@@ -47,10 +49,10 @@ both results are included to the table. Notice that the difference in the result
 
 | Movie ID      | Actual Rating Count | Noisy Rating Count (exp-1) | Noisy Rating Count (exp-2) |
 | ------------- | ------------------- | ---------------------------| -------------------------- |
-| 1             | 412                 | 420,956086753              | 390,802680394              |
-| 10            | 216                 | 219,268858516              | 212,135271164              |
-| 32            | 3295                | 3312,91503397              | 3296,44044631              |
-| 34            | 399                 | 413,114967105              | 392,58561983               |
-| 47            | 480                 | 472,192080468              | 476,43260495               |
+| 1             | 412                 | 420\,956086753             | 390\,802680394             |
+| 10            | 216                 | 219\,268858516             | 212\,135271164             |
+| 32            | 3295                | 3312\,91503397             | 3296\,44044631             |
+| 34            | 399                 | 413\,114967105             | 392\,58561983              |
+| 47            | 480                 | 472\,192080468             | 476\,43260495              |
 
 For more information: [Final Report of Project](/docs/finalReport.pdf), [Presentation](/docs/presentation.pdf)
