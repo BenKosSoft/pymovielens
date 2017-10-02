@@ -13,8 +13,8 @@ Consider a trusted 3rd party that holds a statistical database of sensitive and 
 provide global, statistical information about the data for helpful applications and researches. 
 
 Such information carries a danger of revealing information about the individuals.
-  + Usage of anonym identities for information might be a method of preserving real identities but deanonymization techniques using two or more separately innocuous databases  
-  can reveal the true identities of data providers.
+    + Usage of anonym identities for information might be a method of preserving real identities but deanonymization techniques using two or more separately innocuous databases  
+    can reveal the true identities of data providers.
  
 Differential privacy aims to provide means to maximize the accuracy of these statistical queries while minimizing the chances of identifying its records. It introduces noise
 to real data so that, adding or removing one user to database does not make noticeable difference in the data, thus preventing to identify his/her private information. It is
