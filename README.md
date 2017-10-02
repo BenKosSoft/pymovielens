@@ -13,6 +13,7 @@ Consider a trusted 3rd party that holds a statistical database of sensitive and 
 provide global, statistical information about the data for helpful applications and researches. 
 
 Such information carries a danger of revealing information about the individuals.
+
     + Usage of anonym identities for information might be a method of preserving real identities but deanonymization techniques using two or more separately innocuous databases  
     can reveal the true identities of data providers.
  
