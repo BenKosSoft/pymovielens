@@ -2,10 +2,9 @@
 
 Applying *differential privacy* to movie recommendation system to guarantee the privacy of individual user ratings.
 
-**Implemented By:**
-
-* @mertkosan
-* @mbenlioglu
+**Implemented by:**
+ * [Mert Kosan](https://github.com/mertkosan)
+ * [M.Mucahid Benlioglu](https://github.com/mbenlioglu)
 
 ## About
 
